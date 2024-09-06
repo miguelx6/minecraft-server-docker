@@ -1,35 +1,32 @@
-#!/bin/bash
+# backup.ps1
 
 # Configuración
-MINECRAFT_DIR="/path/to/your/minecraft/data"
-BACKUP_DIR="/path/to/your/backup/directory"
-DATE=$(date +"%Y-%m-%d_%H-%M-%S")
-BACKUP_FILE="minecraft_backup_$DATE.tar.gz"
+$MINECRAFT_DIR = "C:\Users\migue\AppData\Roaming\.minecraft"
+$BACKUP_DIR = "C:\Users\migue\AppData\Roaming\.minecraft\backup"
+$DATE = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+$BACKUP_FILE = "minecraft_backup_$DATE.zip"
 
 # Asegúrate de que el directorio de backup existe
-mkdir -p $BACKUP_DIR
+if (-not (Test-Path $BACKUP_DIR)) {
+    New-Item -ItemType Directory -Force -Path $BACKUP_DIR
+}
 
-# Detener el servidor de Minecraft (asumiendo que usas Docker Compose)
-echo "Deteniendo el servidor de Minecraft..."
-docker-compose down
+# Aviso al usuario
+Write-Host "Asegúrate de haber cerrado el juego antes de continuar."
+Read-Host "Presiona Enter para continuar..."
 
 # Crear el backup
-echo "Creando backup..."
-tar -czf $BACKUP_DIR/$BACKUP_FILE -C $MINECRAFT_DIR .
-
-# Reiniciar el servidor
-echo "Reiniciando el servidor de Minecraft..."
-docker-compose up -d
+Write-Host "Creando backup..."
+Compress-Archive -Path "$MINECRAFT_DIR\*" -DestinationPath "$BACKUP_DIR\$BACKUP_FILE" -Force
 
 # Verificar si el backup se creó correctamente
-if [ -f "$BACKUP_DIR/$BACKUP_FILE" ]; then
-    echo "Backup creado exitosamente: $BACKUP_FILE"
-else
-    echo "Error: No se pudo crear el backup"
-fi
+if (Test-Path "$BACKUP_DIR\$BACKUP_FILE") {
+    Write-Host "Backup creado exitosamente: $BACKUP_FILE"
+} else {
+    Write-Host "Error: No se pudo crear el backup"
+}
 
 # Opcional: Eliminar backups antiguos (mantener solo los últimos 5)
-cd $BACKUP_DIR
-ls -t | tail -n +6 | xargs -I {} rm -- {}
+Get-ChildItem $BACKUP_DIR | Where-Object {$_.Name -like "minecraft_backup_*.zip"} | Sort-Object CreationTime -Descending | Select-Object -Skip 5 | Remove-Item -Force
 
-echo "Proceso de backup completado"
+Write-Host "Proceso de backup completado"

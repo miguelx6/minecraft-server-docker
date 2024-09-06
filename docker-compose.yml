@@ -7,6 +7,13 @@ services:
       - 25565:25565
     environment:
       EULA: "TRUE"
+      ONLINE_MODE: "false"  # Permite conexiones de cuentas no premium
+      DIFFICULTY: "easy"  # Puedes cambiar a easy, hard, etc.
+      GAMEMODE: "creative"  # Puedes cambiar a creative, adventure, etc.
+      MAX_PLAYERS: 20
+      ALLOW_NETHER: "true"
+      ENABLE_COMMAND_BLOCK: "true"
+      MOTD: "Mi Servidor de Minecraft"
     volumes:
       - ./data:/data
     restart: unless-stopped

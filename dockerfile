@@ -9,7 +9,7 @@ ENV EULA=TRUE \
     MAX_PLAYERS=20 \
     ALLOW_NETHER=true \
     ENABLE_COMMAND_BLOCK=true \
-    MOTD="Mi Servidor de Minecraft"
+    MOTD="Servidor de la celda"
 
 # Exponemos el puerto 25565 para que otros jugadores puedan conectarse
 EXPOSE 25565

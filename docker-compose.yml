@@ -13,7 +13,7 @@ services:
       MAX_PLAYERS: 20
       ALLOW_NETHER: "true"
       ENABLE_COMMAND_BLOCK: "true"
-      MOTD: "Mi Servidor de Minecraft"
+      MOTD: "Servidor de la celda"
     volumes:
       - ./data:/data
     restart: unless-stopped
